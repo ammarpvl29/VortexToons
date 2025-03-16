@@ -86,6 +86,6 @@ This site was built entirely for education purposes only.
 Code in this repository is open-sourced software licensed under the [GPL-3.0 license](https://opensource.org/licenses/GPL-3.0).  
 See the [LICENSE.md](https://github.com/Saul-Lara/Laravel-Marvel-Api/blob/master/LICENSE) file for details.
 
-Saul Hdz Lara
+ammarpvl29
 
 ---
