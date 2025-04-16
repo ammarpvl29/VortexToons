@@ -34,5 +34,11 @@ return [
         'public_key' => env('MARVEL_API_PUBLIC_KEY'),
         'private_key' => env('MARVEL_API_PRIVATE_KEY'),
     ],
+	
+	'marvel' => [
+		'base_uri' => 'https://gateway.marvel.com/v1/public/',
+		'verify' => storage_path('certs/cacert.pem'), // Path to certificate
+		'timeout' => 30, // Optional: Set request timeout
+	],
 
 ];
