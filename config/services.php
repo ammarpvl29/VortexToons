@@ -31,10 +31,10 @@ return [
     ],
 
     'marvelapi' => [
-        'public_key' => env('MARVEL_API_PUBLIC_KEY'),
-        'private_key' => env('MARVEL_API_PRIVATE_KEY'),
+        'public_key' => env('MARVEL_PUBLIC_KEY'),
+        'private_key' => env('MARVEL_PRIVATE_KEY'),
     ],
-	
+
 	'marvel' => [
 		'base_uri' => 'https://gateway.marvel.com/v1/public/',
 		'verify' => storage_path('certs/cacert.pem'), // Path to certificate

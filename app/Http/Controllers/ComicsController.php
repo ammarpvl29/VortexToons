@@ -20,35 +20,38 @@ class ComicsController extends Controller
         $timestamp = time();
         $privateKey = config('services.marvelapi.private_key');
         $publicKey = config('services.marvelapi.public_key');
-
-        $hash = md5($timestamp.$privateKey.$publicKey);
-
-        $comicsLastMonth = Http::get('https://gateway.marvel.com/v1/public/comics', [
-            'format' => 'comic',
-            'formatType' => 'comic',
-            'dateDescriptor' => 'thisMonth',
-            'orderBy' => 'title',
-            'limit' => '10',
+        $hash = md5($timestamp . $privateKey . $publicKey);
+    
+        // Log the request URL for debugging
+        \Log::info('Making Marvel API Request:', [
+            'url' => "https://gateway.marvel.com/v1/public/comics?ts={$timestamp}&apikey={$publicKey}&hash={$hash}"
+        ]);
+    
+        // Make the API request
+        $response = Http::get('https://gateway.marvel.com/v1/public/comics', [
             'ts' => $timestamp,
             'apikey' => $publicKey,
             'hash' => $hash,
-        ])->json();
-
-        //dump($comicsLastMonth['data']['results']);
-        
-        /*
-        return view('index', [
-            'comicsLastMonth' => $comicsLastMonth['data']['results']
         ]);
-        */
-
-        $viewModel = new ComicsViewModel(
-            $comicsLastMonth['data']['results']
-        );
-
-        return view('comics.index', $viewModel);
+    
+        // Log the response for debugging
+        \Log::info('Marvel API Response:', $response->json());
+    
+        if ($response->successful()) {
+            $comicsLastMonth = $response->json();
+    
+            if (isset($comicsLastMonth['data']['results']) && count($comicsLastMonth['data']['results']) > 0) {
+                $viewModel = new ComicsViewModel($comicsLastMonth['data']['results']);
+                return view('comics.index', $viewModel);
+            }
+    
+            \Log::warning('Marvel API returned no comics.');
+            return response()->json(['error' => 'No comics found'], 404);
+        }
+    
+        \Log::error('Marvel API Error:', $response->json());
+        return response()->json(['error' => 'Failed to fetch comics. Please check your API keys.'], 500);
     }
-
     /**
      * Show the form for creating a new resource.
      *
